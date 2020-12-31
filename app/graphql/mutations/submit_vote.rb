@@ -1,6 +1,5 @@
 require 'rest-client'
 
-
 class Mutations::SubmitVote < Mutations::BaseMutation
 
     argument :token, String, required: true
@@ -12,15 +11,20 @@ class Mutations::SubmitVote < Mutations::BaseMutation
     def resolve(token:, nomineeid:)
 
         response = RestClient.get("https://kitsu.io/api/edge/users?filter[self]=true", {'Authorization': 'Bearer '+token})
-        userid = JSON.parse(response.body)['data'][0]['id']
         # We check if the token is correct and if yes there is a userid
-        if defined? userid
+        if defined? JSON.parse(response.body)['data'][0]['id']
+            userid = JSON.parse(response.body)['data'][0]['id']
 
             subcategoryid = Nominee.find(nomineeid).subcategory_id
             
             if Time.now > Year.last.start && Time.now < Year.last.end
-                anticheat = DateTime.parse(JSON.parse(response.body)['data'][0]['attributes']['createdAt']) < Year.last.start
-                vote = Vote.new(user_id: userid, nominee_id: nomineeid, subcategories_id: subcategoryid,verified: anticheat)
+                if Vote.where(user_id: userid, subcategories_id: subcategoryid).count == 0
+                    vote = Vote.new(user_id: userid, nominee_id: nomineeid, subcategories_id: subcategoryid)
+                else
+                    vote = Vote.where(user_id: userid, subcategories_id: subcategoryid).last
+                    vote.nominee_id=nomineeid
+                end
+                anticheat(response,userid)
                 #We create the vote
                 if vote.save
                     {
@@ -49,5 +53,16 @@ class Mutations::SubmitVote < Mutations::BaseMutation
         
     end
 
+    def anticheat(response,userid)
+        verified_email=!JSON.parse(response.body)['data'][0]['attributes']['confirmed']
+        date_creation=Date.parse(JSON.parse(response.body)['data'][0]['attributes']['createdAt'])> Year.last.start
+        number_entries=!(JSON.parse(response.body)['data'][0]['attributes']['ratingsCount']>10)
+        username=JSON.parse(response.body)['data'][0]['attributes']['name']
+        pfp=JSON.parse(response.body)['data'][0]['attributes']['avatar']==nil
+        if verified_email || date_creation || number_entries || pfp
+            blacklisted=Blacklist.new(user_id: userid, username: username, acc_non_verified_email: verified_email, acc_too_recent: date_creation, acc_not_enough_entries: number_entries, acc_default_pfp: pfp)
+            blacklisted.save
+        end
+    end
 
 end

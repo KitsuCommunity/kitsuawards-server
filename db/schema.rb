@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_23_163058) do
+ActiveRecord::Schema.define(version: 2020_12_31_125632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "blacklists", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "username", null: false
+    t.boolean "acc_too_recent", default: false
+    t.boolean "acc_not_enough_entries", default: false
+    t.boolean "acc_non_verified_email", default: false
+    t.boolean "acc_default_pfp", default: false
+    t.boolean "verified"
+  end
 
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
@@ -45,7 +55,6 @@ ActiveRecord::Schema.define(version: 2020_04_23_163058) do
     t.datetime "date", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "user_id", null: false
     t.bigint "nominee_id", null: false
-    t.boolean "verified", default: true
     t.bigint "subcategories_id"
     t.index ["nominee_id"], name: "index_votes_on_nominee_id"
     t.index ["subcategories_id"], name: "index_votes_on_subcategories_id"

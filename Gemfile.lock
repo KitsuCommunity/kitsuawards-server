@@ -240,6 +240,10 @@ GEM
     ruby_dep (1.5.0)
     rubyzip (2.0.0)
     sass (3.7.4)
+      sass-listen (~> 4.0.0)
+    sass-listen (4.0.0)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
     sass-rails (5.1.0)
       railties (>= 5.2.0)
       sass (~> 3.1)
@@ -310,6 +314,7 @@ PLATFORMS
   x64-mingw32
   x86-mingw32
   x86-mswin32
+  x86_64-linux
 
 DEPENDENCIES
   bootsnap (>= 1.1.0)
@@ -342,4 +347,4 @@ RUBY VERSION
    ruby 2.5.5p157
 
 BUNDLED WITH
-   2.1.4
+   2.2.2

@@ -15,7 +15,7 @@ class BaseData < ActiveRecord::Migration[5.2]
     create_table :subcategories do |t|
       t.boolean :status,            null: false, default: 0
       t.string :name,               null: false
-      t.belongs_to :categorie,           foreign_key: true
+      t.belongs_to :categorie,      foreign_key: true
       t.belongs_to :year,           foreign_key: true
     end
 
