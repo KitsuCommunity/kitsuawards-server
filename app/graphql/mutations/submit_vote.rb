@@ -16,8 +16,7 @@ class Mutations::SubmitVote < Mutations::BaseMutation
             userid = JSON.parse(response.body)['data'][0]['id']
 
             subcategoryid = Nominee.find(nomineeid).subcategory_id
-            
-            if Time.now > Year.last.start && Time.now < Year.last.end
+            if Time.now > Year.last.start && Time.now < Year.last.end && Time.now > Category.find(subcategoryid).start && Time.now < Category.find(subcategoryid).end
                 if Vote.where(user_id: userid, subcategories_id: subcategoryid).count == 0
                     vote = Vote.new(user_id: userid, nominee_id: nomineeid, subcategories_id: subcategoryid)
                 else

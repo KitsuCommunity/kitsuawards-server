@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_31_125632) do
+ActiveRecord::Schema.define(version: 2021_01_06_114244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,8 @@ ActiveRecord::Schema.define(version: 2020_12_31_125632) do
     t.string "name", null: false
     t.bigint "year_id", null: false
     t.string "url", null: false
+    t.datetime "start"
+    t.datetime "end"
     t.index ["year_id"], name: "index_categories_on_year_id"
   end
 
@@ -49,6 +51,13 @@ ActiveRecord::Schema.define(version: 2020_12_31_125632) do
     t.string "name", null: false
     t.bigint "category_id", null: false
     t.index ["category_id"], name: "index_subcategories_on_category_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.string "password_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "votes", force: :cascade do |t|
