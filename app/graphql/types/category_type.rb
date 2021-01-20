@@ -6,6 +6,11 @@ module Types
         field :url, String, null: false
         field :start, String, null: false
         field :end, String, null: false
-        field :subcategories, [Types::SubcategoryType], null: false
+        field :subcategories, [Types::SubcategoryType], null: true
+        def subcategories
+            if Time.now >= object.start
+                object.subcategories
+            end
+        end
     end
 end
