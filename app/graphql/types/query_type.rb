@@ -26,7 +26,7 @@ module Types
       end
     end
 
-    field :Results, [String], null: true do
+    field :results, [String], null: true do
       description "Show current year information"
       argument :token, String, required: false
     end
@@ -35,7 +35,7 @@ module Types
         judges=Judge.all.map(&:user_id)
         judges_votes=Vote.where(user_id: judges)
         blacklist=Blacklist.where(acc_too_recent: true).or(Blacklist.where(acc_not_enough_entries: true)).or(Blacklist.where(acc_non_verified_email: true)).or(Blacklist.where(acc_default_pfp: true)).map(&:user_id).uniq
-        users_votes=Vote.where.not(user_id: blacklist)
+        users_votes=Vote.where.not(id: judges_votes,user_id: blacklist)
         {
           judges: judges_votes.group(:nominee_id).count(:user_id),
           users: users_votes.group(:nominee_id).count(:user_id)
@@ -47,7 +47,7 @@ module Types
           judges=Judge.all.map(&:user_id)
           judges_votes=Vote.where(user_id: judges)
           blacklist=Blacklist.where(acc_too_recent: true).or(Blacklist.where(acc_not_enough_entries: true)).or(Blacklist.where(acc_non_verified_email: true)).or(Blacklist.where(acc_default_pfp: true)).map(&:user_id).uniq
-          users_votes=Vote.where.not(user_id: blacklist)
+          users_votes=Vote.where.not(id: judges_votes,user_id: blacklist)
           if userid=="171273" or userid=="195642"
             {
               judges: judges_votes.group(:nominee_id).count(:user_id),
