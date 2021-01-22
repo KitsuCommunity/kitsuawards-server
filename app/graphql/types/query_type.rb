@@ -12,11 +12,11 @@ module Types
       Year.order('start desc').limit(1)
     end
 
-    field :FetchVote, [VoteType], null: true do
+    field :fetchvote, [VoteType], null: true do
       description "Get users votes"
       argument :token, String, required: false
     end
-    def fetch_vote(token:)
+    def fetchvote(token:)
       if defined? token
         response = RestClient.get("https://kitsu.io/api/edge/users?filter[self]=true", {'Authorization': 'Bearer '+token})
         if defined? JSON.parse(response.body)['data'][0]['id']
@@ -30,7 +30,7 @@ module Types
       description "Show current year information"
       argument :token, String, required: false
     end
-    def results(token:)
+    def results(token: nil)
       if Year.last.show_results
         judges=Judge.all.map(&:user_id)
         judges_votes=Vote.where(user_id: judges)
