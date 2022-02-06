@@ -39,8 +39,10 @@ module Types
 #            if defined? JSON.parse(response.body)['data'][0]['id']
 #              userid=JSON.parse(response.body)['data'][0]['id']
 #              if userid == '195642' or userid == '171273'
+                blacklist=Blacklist.where(acc_too_recent: true).or(Blacklist.where(acc_not_enough_entries: true)).or(Blacklist.where(acc_non_verified_email: true)).or(Blacklist.where(acc_default_pfp: true)).map(&:user_id).uniq
                 judges=Judge.all.map(&:user_id)
-                Vote.where(user_id: judges, nominee: object).count
+                judges_votes=Vote.where(user_id: judges)
+                Vote.where.not(id: judges_votes,user_id: blacklist).where(nominee: object).count
 #              end
 #            end
           end
