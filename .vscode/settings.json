@@ -1,0 +1,4 @@
+{
+  "solargraph.bundlerPath": "bin/bundle",
+  "solargraph.commandPath": "bin/solargraph"
+}
