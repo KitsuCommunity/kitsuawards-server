@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GraphQLController < ApplicationController
   protect_from_forgery with: :null_session
 
@@ -10,10 +12,10 @@ class GraphQLController < ApplicationController
     result = KitsuAwardsSchema.execute(query, context: context, operation_name: operation_name, variables: variables)
 
     render json: result
-  rescue => err
-    raise err unless Rails.env.development?
+  rescue StandardError => e
+    raise e unless Rails.env.development?
 
-    handle_error_in_development err
+    handle_error_in_development e
   end
 
   private
@@ -40,6 +42,6 @@ class GraphQLController < ApplicationController
     logger.error err.message
     logger.error err.backtrace.join("\n")
 
-    render json: { data: {}, error: { backtrace: err.backtrace, message: err.message } }, status: 500
+    render json: { data: {}, error: { backtrace: err.backtrace, message: err.message } }, status: :internal_server_error
   end
 end

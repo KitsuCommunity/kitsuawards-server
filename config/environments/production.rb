@@ -46,6 +46,14 @@ KitsuAwards::Application.configure do
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 
+  # Add custom information to the logs.
+  config.lograge.custom_options = lambda do |event|
+    options = event.payload.slice(:request_id)
+    options[:params] = event.payload[:params].except('controller', 'action')
+
+    options
+  end
+
   # Enable Lograge in production.
   config.lograge.enabled = true
 

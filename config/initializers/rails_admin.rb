@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RailsAdmin.config do |config|
   config.actions do
     dashboard
@@ -17,7 +19,7 @@ RailsAdmin.config do |config|
     authenticate_or_request_with_http_basic('Login required') do |username, password|
       user = User.where(name: username).first
 
-      user.authenticate(password) if user
+      user&.authenticate(password)
     end
   end
 end
