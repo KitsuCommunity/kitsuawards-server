@@ -12,6 +12,7 @@
 !/dumps/.keep
 /log/*
 !/log/.keep
+/public/assets
 /tmp/*
 /tmp/pids/*
 !/tmp/pids/
