@@ -33,7 +33,7 @@ module Mutations
 
         if Time.zone.now > Year.last.start && Time.zone.now < Year.last.end && Time.zone.now > Subcategory.find(subcategory_id).category.start && Time.zone.now < Subcategory.find(subcategory_id).category.end
           if Vote.where(subcategories_id: subcategory_id, user_id: user_id).count.zero?
-            vote = Vote.now(nominee_id: nominee_id, subcategories_id: subcategory_id, user_id: user_id)
+            vote = Vote.new(nominee_id: nominee_id, subcategories_id: subcategory_id, user_id: user_id)
           else
             vote = Vote.where(subcategories_id: subcategory_id, user_id: user_id).last
             vote.nominee_id = nominee_id
