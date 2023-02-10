@@ -3,7 +3,7 @@
 KitsuAwards::Application.routes.draw do
   mount RailsAdmin::Engine => '/admin'
 
-  get '/graphiql', to: 'graphiql#playground' if Rails.env.development?
+  get '/graphiql', to: 'graphiql#playground'
 
   post '/graphql', to: 'graphql#execute'
 end
